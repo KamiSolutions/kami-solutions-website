@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Kami Solutions</title>
+  <meta name="description" content="Book a consultation with Kami Solutions. Let's discuss your website, software, brand, or automation project and build something extraordinary together.">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="contact">
+
+  <div class="cursor-dot"  id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+  <div class="page-overlay" id="page-overlay"></div>
+  <div id="nav-root"></div>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero section">
+      <div class="page-hero__bg">
+        <div class="page-hero__grid"></div>
+        <div class="page-hero__glow"></div>
+      </div>
+      <div class="container" style="position:relative;z-index:1;">
+        <span class="text-label page-hero__label reveal">Get In Touch</span>
+        <h1 class="display-lg page-hero__title reveal reveal-d1">
+          Let's Build<br>
+          <span class="italic text-accent">Something Great.</span>
+        </h1>
+        <p class="text-xl page-hero__desc reveal reveal-d2">
+          Tell us about your project. We'll respond within 24 hours with honest thoughts on how we can help.
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTACT LAYOUT -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-layout">
+
+          <!-- Sidebar (injected by JS) -->
+          <div class="contact-sidebar reveal">
+            <span class="text-label">Direct Contact</span>
+            <div id="contact-info"></div>
+          </div>
+
+          <!-- Form (injected by JS) -->
+          <div class="contact-form-container reveal reveal-d1" id="contact-form-container"></div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT TO EXPECT -->
+    <section class="section" style="background:var(--bg-secondary);">
+      <div class="container">
+        <div class="section-header">
+          <span class="text-label section-label reveal">What Happens Next</span>
+          <h2 class="display-md section-heading reveal reveal-d1">After You Send<br>Your Message</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gutter);">
+          <div class="reveal reveal-d1" style="padding:36px;border:1px solid var(--border);border-radius:var(--r-md);">
+            <span class="text-label" style="margin-bottom:16px;">Within 24 Hours</span>
+            <h3 style="font-family:var(--font-heading);font-size:24px;font-weight:400;margin-bottom:12px;">We Read Everything</h3>
+            <p class="text-sm text-second" style="line-height:1.75;">Every message is read by a real person. We'll review your project details carefully before responding — no auto-replies, no generic responses.</p>
+          </div>
+          <div class="reveal reveal-d2" style="padding:36px;border:1px solid var(--border);border-radius:var(--r-md);">
+            <span class="text-label" style="margin-bottom:16px;">Consultation Call</span>
+            <h3 style="font-family:var(--font-heading);font-size:24px;font-weight:400;margin-bottom:12px;">We Schedule a Call</h3>
+            <p class="text-sm text-second" style="line-height:1.75;">A focused 30–60 minute call where we dig into your business, your goals, and what success looks like. No sales pitch — just honest conversation.</p>
+          </div>
+          <div class="reveal reveal-d3" style="padding:36px;border:1px solid var(--border);border-radius:var(--r-md);">
+            <span class="text-label" style="margin-bottom:16px;">Proposal</span>
+            <h3 style="font-family:var(--font-heading);font-size:24px;font-weight:400;margin-bottom:12px;">You Receive a Proposal</h3>
+            <p class="text-sm text-second" style="line-height:1.75;">A detailed proposal covering scope, timeline, investment, and exactly what you'll receive. Clear, transparent, no surprises.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REASSURANCE -->
+    <section class="section">
+      <div class="container">
+        <div style="max-width:800px;margin:0 auto;text-align:center;">
+          <span class="text-label reveal" style="margin-bottom:20px;display:block;">Still on the Fence?</span>
+          <h2 class="display-md reveal reveal-d1" style="margin-bottom:24px;">
+            The consultation is free.<br>The commitment comes later.
+          </h2>
+          <p class="text-lg text-second reveal reveal-d2" style="margin-bottom:40px;">
+            Reaching out doesn't lock you into anything. We'd rather spend 30 minutes understanding your business and have you leave with clarity — whether you work with us or not.
+          </p>
+          <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap;" class="reveal reveal-d3">
+            <div style="text-align:center;">
+              <span style="font-family:var(--font-heading);font-size:48px;font-weight:300;color:var(--accent);display:block;line-height:1;">98%</span>
+              <span class="text-label" style="color:var(--text-muted);">Client Satisfaction</span>
+            </div>
+            <div style="text-align:center;">
+              <span style="font-family:var(--font-heading);font-size:48px;font-weight:300;color:var(--accent);display:block;line-height:1;">50+</span>
+              <span class="text-label" style="color:var(--text-muted);">Projects Delivered</span>
+            </div>
+            <div style="text-align:center;">
+              <span style="font-family:var(--font-heading);font-size:48px;font-weight:300;color:var(--accent);display:block;line-height:1;">24h</span>
+              <span class="text-label" style="color:var(--text-muted);">Response Time</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-root"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

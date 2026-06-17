@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Infrastructure For Ambitious Businesses | Kami Solutions</title>
+  <meta name="description" content="Kami Solutions is a premium African creative technology studio. We build websites, software, dashboards, and brands for ambitious businesses.">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="home">
+
+  <!-- Cursor -->
+  <div class="cursor-dot"  id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- Page loader -->
+  <div class="page-loader" id="page-loader">
+    <span class="page-loader__logo">KAMI</span>
+    <div class="page-loader__bar-track">
+      <div class="page-loader__bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- Page transition overlay -->
+  <div class="page-overlay" id="page-overlay"></div>
+
+  <!-- Navigation (injected by JS) -->
+  <div id="nav-root"></div>
+
+  <main>
+
+    <!-- ── HERO ──────────────────────────────────────────────────── -->
+    <section class="hero" id="hero">
+      <div class="hero__bg">
+        <div class="hero__grid"></div>
+        <div class="hero__glow"></div>
+      </div>
+      <div class="hero__watermark" aria-hidden="true">KAMI</div>
+
+      <div class="container hero__container">
+        <div class="hero__content">
+
+          <span class="text-label hero__label hero-label-anim">
+            Creative Technology Studio
+          </span>
+
+          <h1 class="display-xl hero__headline">
+            <span class="hero-line-wrap">
+              <span class="hero-line-inner" style="--delay: 400ms;">Digital</span>
+            </span>
+            <span class="hero-line-wrap">
+              <span class="hero-line-inner italic" style="--delay: 520ms;">Infrastructure</span>
+            </span>
+            <span class="hero-line-wrap">
+              <span class="hero-line-inner" style="--delay: 640ms;">For Ambitious</span>
+            </span>
+            <span class="hero-line-wrap">
+              <span class="hero-line-inner italic" style="--delay: 760ms;">Businesses.</span>
+            </span>
+          </h1>
+
+          <div class="divider-accent hero__divider hero-divider-anim"></div>
+
+          <p class="text-xl hero__sub hero-sub-anim">
+            We design websites, software, systems, and brands<br>
+            that help African companies scale.
+          </p>
+
+          <div class="hero__actions hero-actions-anim">
+            <a href="contact.html" class="btn btn-primary" data-magnetic>
+              Book A Consultation
+            </a>
+            <a href="portfolio.html" class="btn btn-ghost">
+              View Our Work <span class="btn-arrow">→</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <div class="scroll-indicator">
+          <span class="scroll-indicator__label">Scroll</span>
+          <div class="scroll-indicator__line">
+            <div class="scroll-indicator__dot"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS ─────────────────────────────────────────────────── -->
+    <section class="stats-section section-sm" id="stats">
+      <div class="container">
+        <div id="stats-grid"></div>
+      </div>
+    </section>
+
+    <!-- ── SERVICES PREVIEW ──────────────────────────────────────── -->
+    <section class="section" id="services-preview">
+      <div class="container">
+        <div class="section-header">
+          <span class="text-label section-label reveal">What We Do</span>
+          <h2 class="display-md section-heading reveal reveal-d1">
+            Everything Your<br>Business Needs to Scale
+          </h2>
+        </div>
+        <div class="services-preview__grid" id="services-preview-grid"></div>
+        <div class="services-preview__cta reveal" style="margin-top:56px;text-align:center;">
+          <a href="services.html" class="btn btn-ghost">
+            Explore All Services <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── WORK PREVIEW ──────────────────────────────────────────── -->
+    <section class="section work-preview" id="work-preview">
+      <div class="container">
+        <div class="section-header">
+          <span class="text-label section-label reveal">Selected Work</span>
+          <h2 class="display-md section-heading reveal reveal-d1">
+            Projects That<br>Moved the Needle
+          </h2>
+        </div>
+        <div class="work-preview__grid" id="work-preview-grid"></div>
+        <div class="work-preview__cta reveal" style="margin-top:56px;text-align:center;">
+          <a href="portfolio.html" class="btn btn-ghost">
+            View All Projects <span class="btn-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT PREVIEW ─────────────────────────────────────────── -->
+    <section class="section" id="about-preview">
+      <div class="container">
+        <div class="about-preview__inner">
+
+          <div class="about-preview__content">
+            <span class="text-label section-label reveal">Our Difference</span>
+            <h2 class="display-md reveal reveal-d1">
+              We Build Digital<br>Infrastructure.<br>Not Just Websites.
+            </h2>
+            <p class="text-lg text-second reveal reveal-d2">
+              Kami Solutions is a premium African creative technology studio. We combine world-class
+              design standards with deep understanding of the African market to help ambitious
+              businesses compete at the highest level.
+            </p>
+            <a href="about.html" class="btn btn-ghost reveal reveal-d3">
+              Our Story <span class="btn-arrow">→</span>
+            </a>
+          </div>
+
+          <div class="about-preview__visual reveal reveal-d2">
+            <div class="about-preview__box">
+              <div class="about-preview__headline display-md font-heading">
+                <span class="line1">Africa.</span>
+                <span class="line2">First.</span>
+              </div>
+              <p class="about-preview__caption">
+                Built for the continent.<br>Held to international standards.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ──────────────────────────────────────────── -->
+    <section class="section testimonials-section" id="testimonials">
+      <div class="container">
+        <div class="section-header">
+          <span class="text-label section-label reveal">Client Results</span>
+          <h2 class="display-md section-heading reveal reveal-d1">What Clients Say</h2>
+        </div>
+        <div id="testimonials-grid"></div>
+      </div>
+    </section>
+
+    <!-- ── CTA ───────────────────────────────────────────────────── -->
+    <section class="section cta-section" id="cta">
+      <div class="cta-glow" style="left:50%;top:50%;transform:translate(-50%,-50%);"></div>
+      <div class="container">
+        <div class="cta-section__inner reveal">
+          <span class="text-label">Ready to Scale?</span>
+          <h2 class="display-lg" style="text-align:center;">
+            Let's Build Something<br>
+            <span class="text-accent italic">Extraordinary</span>
+          </h2>
+          <p class="text-lg text-second" style="text-align:center;max-width:52ch;">
+            Book a consultation and let's discuss how Kami Solutions can build the digital
+            infrastructure your business deserves.
+          </p>
+          <div class="cta-section__actions">
+            <a href="contact.html" class="btn btn-primary" data-magnetic>
+              Book A Consultation
+            </a>
+            <a href="https://wa.me/27720000000?text=Hi%20Kami%20Solutions%2C%20I'd%20like%20to%20discuss%20a%20project."
+               target="_blank" rel="noopener" class="btn btn-ghost">
+              WhatsApp Us <span class="btn-arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer (injected by JS) -->
+  <div id="footer-root"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

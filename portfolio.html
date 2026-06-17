@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Work | Kami Solutions</title>
+  <meta name="description" content="Case studies from Kami Solutions — logistics dashboards, e-commerce stores, construction websites, and property management portals for ambitious African businesses.">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="portfolio">
+
+  <div class="cursor-dot"  id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+  <div class="page-overlay" id="page-overlay"></div>
+  <div id="nav-root"></div>
+
+  <!-- Case study panel (injected content by JS) -->
+  <div class="case-study-panel" id="case-study-panel" role="dialog" aria-modal="true" aria-label="Case Study"></div>
+  <div class="panel-backdrop" id="panel-backdrop"></div>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero section">
+      <div class="page-hero__bg">
+        <div class="page-hero__grid"></div>
+        <div class="page-hero__glow"></div>
+      </div>
+      <div class="container" style="position:relative;z-index:1;">
+        <span class="text-label page-hero__label reveal">Selected Work</span>
+        <h1 class="display-lg page-hero__title reveal reveal-d1">
+          Projects That<br>
+          <span class="italic text-accent">Moved the Needle.</span>
+        </h1>
+        <p class="text-xl page-hero__desc reveal reveal-d2">
+          Every project is a partnership. Every case study is proof. Click any project to read the full story.
+        </p>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO GRID -->
+    <section class="section" id="portfolio">
+      <div class="container">
+
+        <!-- Filters (populated by JS) -->
+        <div class="portfolio-filters" id="portfolio-filters"></div>
+
+        <!-- Cards (populated by JS) -->
+        <div class="portfolio-grid" id="portfolio-grid"></div>
+
+      </div>
+    </section>
+
+    <!-- APPROACH -->
+    <section class="section" style="background:var(--bg-secondary);">
+      <div class="container">
+        <div class="about-story__inner">
+          <div class="about-story__sticky">
+            <span class="text-label reveal">Our Approach to Projects</span>
+            <h2 class="display-md reveal reveal-d1" style="margin-top:20px;">
+              We Measure<br>Success in<br>Business Outcomes
+            </h2>
+            <div class="divider-accent reveal reveal-d2"></div>
+            <p class="text-md text-second reveal reveal-d3" style="max-width:38ch;">
+              Beautiful design is the minimum. What we're actually building toward is measurable impact on your business.
+            </p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div class="reveal" style="padding:36px 0;border-bottom:1px solid var(--border);">
+              <h3 class="display-sm" style="margin-bottom:12px;">Strategy First</h3>
+              <p class="text-md text-second">Before we design anything, we understand your business model, your customers, and what success actually looks like. Every creative decision flows from business logic.</p>
+            </div>
+            <div class="reveal reveal-d1" style="padding:36px 0;border-bottom:1px solid var(--border);">
+              <h3 class="display-sm" style="margin-bottom:12px;">Obsessive Craft</h3>
+              <p class="text-md text-second">We hold ourselves to an international standard of craft. Typography, spacing, interaction design, code quality — every layer receives the same level of attention.</p>
+            </div>
+            <div class="reveal reveal-d2" style="padding:36px 0;">
+              <h3 class="display-sm" style="margin-bottom:12px;">Tracked Results</h3>
+              <p class="text-md text-second">We don't just launch and move on. We track the metrics that matter — revenue, enquiries, efficiency gains — and use that data to keep improving the work.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+      <div class="cta-glow" style="left:50%;top:50%;transform:translate(-50%,-50%);"></div>
+      <div class="container">
+        <div class="cta-section__inner reveal">
+          <span class="text-label">Your Project Could Be Next</span>
+          <h2 class="display-lg" style="text-align:center;">
+            Let's Build Your<br>
+            <span class="text-accent italic">Case Study</span>
+          </h2>
+          <p class="text-lg text-second" style="text-align:center;max-width:50ch;">
+            Every project on this page started with a conversation. Yours can too.
+          </p>
+          <div class="cta-section__actions">
+            <a href="contact.html" class="btn btn-primary" data-magnetic>Start a Project</a>
+            <a href="services.html" class="btn btn-ghost">Explore Services <span class="btn-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-root"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
