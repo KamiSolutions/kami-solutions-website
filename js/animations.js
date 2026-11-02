@@ -1,373 +1,150 @@
 /**
- * KAMI SOLUTIONS — ANIMATION ENGINE
- * ────────────────────────────────────
- * Custom cursor · Magnetic buttons · Scroll reveals ·
- * Counter animation · Parallax · Page transitions
+ * Behaviour: clock, reveal, counters, work accordion, offerings rail,
+ * mobile menu, and the hero pipeline simulation.
  */
+(function () {
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const KamiAnimations = (() => {
-
-  const cfg = KAMI_CONFIG;
-  let raf   = null;
-
-  // ─── Custom Cursor ───────────────────────────────────────────────
-
-  function initCursor() {
-    if (window.innerWidth <= 768) return;
-
-    const dot  = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    if (!dot || !ring) return;
-
-    let mx = -100, my = -100;
-    let rx = -100, ry = -100;
-    let rafId = null;
-
-    const lerp = (a, b, t) => a + (b - a) * t;
-
-    const moveCursor = () => {
-      dot.style.left  = mx + 'px';
-      dot.style.top   = my + 'px';
-
-      rx = lerp(rx, mx, 0.1);
-      ry = lerp(ry, my, 0.1);
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-
-      rafId = requestAnimationFrame(moveCursor);
-    };
-
-    moveCursor();
-
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX;
-      my = e.clientY;
-    });
-
-    document.addEventListener('mouseleave', () => {
-      dot.style.opacity  = '0';
-      ring.style.opacity = '0';
-    });
-
-    document.addEventListener('mouseenter', () => {
-      dot.style.opacity  = '1';
-      ring.style.opacity = '1';
-    });
-
-    // Cursor state changes
-    document.addEventListener('mouseover', e => {
-      const el = e.target;
-
-      if (el.closest('a, button, [data-magnetic]')) {
-        document.body.classList.add('cursor--btn');
-        document.body.classList.remove('cursor--link', 'cursor--text');
-      } else if (el.closest('p, span, li')) {
-        document.body.classList.add('cursor--text');
-        document.body.classList.remove('cursor--link', 'cursor--btn');
-      } else if (el.closest('[href]')) {
-        document.body.classList.add('cursor--link');
-        document.body.classList.remove('cursor--btn', 'cursor--text');
-      } else {
-        document.body.classList.remove('cursor--link', 'cursor--btn', 'cursor--text');
-      }
-    });
+  // Live Johannesburg clock
+  function initClock() {
+    const el = document.getElementById('clock');
+    if (!el) return;
+    const fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Africa/Johannesburg' });
+    const tick = () => { el.textContent = 'Johannesburg · ' + fmt.format(new Date()) + ' SAST'; };
+    tick(); setInterval(tick, 1000);
   }
 
-  // ─── Magnetic Buttons ────────────────────────────────────────────
-
-  function initMagnetic() {
-    if (window.innerWidth <= 768) return;
-
-    const bindMagnetic = (el) => {
-      el.addEventListener('mousemove', e => {
-        const rect   = el.getBoundingClientRect();
-        const cx     = rect.left + rect.width  / 2;
-        const cy     = rect.top  + rect.height / 2;
-        const dx     = e.clientX - cx;
-        const dy     = e.clientY - cy;
-        const dist   = Math.sqrt(dx * dx + dy * dy);
-        const strength = Math.max(0, 1 - dist / 120);
-        const tx     = dx * strength * 0.35;
-        const ty     = dy * strength * 0.35;
-        el.style.transform = `translate(${tx}px, ${ty}px)`;
-      });
-
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = '';
-        el.style.transition = 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)';
-        setTimeout(() => { el.style.transition = ''; }, 600);
-      });
+  // Scroll reveal + counters
+  function countUp(el) {
+    const m = String(el.dataset.count).match(/^(\d+)(.*)$/);
+    if (!m || reduce) return;
+    const target = parseInt(m[1], 10), suffix = m[2], t0 = performance.now(), dur = 1400;
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur), eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + (p === 1 ? suffix : '');
+      if (p < 1) requestAnimationFrame(step);
     };
-
-    // Observe dynamically added magnetic buttons
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('[data-magnetic]:not([data-magnetic-bound])').forEach(el => {
-        el.setAttribute('data-magnetic-bound', '1');
-        bindMagnetic(el);
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Bind existing ones
-    document.querySelectorAll('[data-magnetic]').forEach(el => {
-      el.setAttribute('data-magnetic-bound', '1');
-      bindMagnetic(el);
-    });
-  }
-
-  // ─── Scroll Reveal ───────────────────────────────────────────────
-
-  function initReveal() {
-    const opts = {
-      root:      null,
-      rootMargin: '0px 0px -60px 0px',
-      threshold:  0.1,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, opts);
-
-    const observe = () => {
-      document.querySelectorAll(
-        '.reveal, .reveal-fade, .reveal-left, .reveal-right, .reveal-scale, .line-accent'
-      ).forEach(el => {
-        if (!el.classList.contains('is-visible')) {
-          observer.observe(el);
-        }
-      });
-    };
-
-    // Observe initial + dynamically added elements
-    observe();
-
-    const mutObs = new MutationObserver(observe);
-    mutObs.observe(document.body, { childList: true, subtree: true });
-  }
-
-  // ─── Counter Animation ───────────────────────────────────────────
-
-  function animateCounter(el, target, suffix, duration = 1800) {
-    let start = null;
-    const numericTarget = parseFloat(target.replace(/[^0-9.]/g, ''));
-    const isFloat       = target.includes('.');
-    const prefix        = target.match(/^[^0-9]*/)?.[0] || '';
-    const mid           = target.match(/[0-9.]+/)?.[0] || '';
-    const postfix       = target.slice(prefix.length + mid.length);
-
-    const step = (timestamp) => {
-      if (!start) start = timestamp;
-      const progress = Math.min((timestamp - start) / duration, 1);
-      const eased    = 1 - Math.pow(1 - progress, 4);
-      const current  = numericTarget * eased;
-
-      el.textContent = prefix + (isFloat
-        ? current.toFixed(1)
-        : Math.floor(current)) + postfix;
-
-      if (progress < 1) requestAnimationFrame(step);
-      else el.textContent = target; // Snap to exact final value
-    };
-
+    el.textContent = '0';
     requestAnimationFrame(step);
   }
 
-  function initCounters() {
-    const opts = {
-      threshold: 0.5,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el     = entry.target;
-        const target = el.dataset.counter;
-        if (!target) return;
-        animateCounter(el, target);
-        observer.unobserve(el);
+  function initReveal() {
+    const items = $$('.reveal');
+    if (!('IntersectionObserver' in window)) { items.forEach(i => i.classList.add('is-in')); return; }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        $$('[data-count]', e.target).forEach(countUp);
+        io.unobserve(e.target);
       });
-    }, opts);
-
-    const observe = () => {
-      document.querySelectorAll('[data-counter]').forEach(el => {
-        observer.observe(el);
-      });
-    };
-
-    observe();
-    new MutationObserver(observe).observe(document.body, { childList: true, subtree: true });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    items.forEach(i => io.observe(i));
   }
 
-  // ─── Hero Animations ─────────────────────────────────────────────
-
-  function initHeroAnimations() {
-    const hero = document.querySelector('.hero');
-    if (!hero) return;
-
-    // Headline line wraps
-    const headline = hero.querySelector('.hero__headline');
-    if (headline) {
-      const lines = Array.from(headline.querySelectorAll('.hero-line-wrap'));
-      lines.forEach((wrap, i) => {
-        const inner = wrap.querySelector('.hero-line-inner');
-        if (inner) {
-          inner.style.setProperty('--delay', `${400 + i * 120}ms`);
-        }
-      });
-    }
-  }
-
-  // ─── Parallax ────────────────────────────────────────────────────
-
-  function initParallax() {
-    const heroGlow = document.querySelector('.hero__glow');
-    const heroWatermark = document.querySelector('.hero__watermark');
-    if (!heroGlow && !heroWatermark) return;
-
-    let ticking = false;
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-
-          if (heroGlow) {
-            heroGlow.style.transform = `translateY(${scrollY * 0.3}px)`;
-          }
-          if (heroWatermark) {
-            heroWatermark.style.transform = `translateY(calc(-50% + ${scrollY * 0.15}px))`;
-          }
-
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-  }
-
-  // ─── Page Transitions ────────────────────────────────────────────
-
-  function initPageTransitions() {
-    const overlay = document.getElementById('page-overlay');
-    if (!overlay) return;
-
-    // Fade in on page load
-    overlay.classList.remove('is-active');
-
-    // Intercept internal link clicks
+  // Work accordion
+  function initAccordion() {
     document.addEventListener('click', e => {
-      const link = e.target.closest('a[href]');
-      if (!link) return;
-
-      const href = link.getAttribute('href');
-
-      // Skip: external, hash-only, no-transition, tel/mailto
-      if (!href ||
-          href.startsWith('http') ||
-          href.startsWith('#') ||
-          href.startsWith('tel:') ||
-          href.startsWith('mailto:') ||
-          link.dataset.noTransition !== undefined ||
-          link.target === '_blank') {
-        return;
-      }
-
-      e.preventDefault();
-      overlay.classList.add('is-active');
-
-      setTimeout(() => {
-        window.location.href = href;
-      }, 650);
+      const head = e.target.closest('.work-row__head');
+      if (!head) return;
+      const row = head.closest('.work-row');
+      const open = row.classList.toggle('is-open');
+      head.setAttribute('aria-expanded', String(open));
     });
   }
 
-  // ─── Page Loader ─────────────────────────────────────────────────
+  // Offerings rail: segmented progress, buttons, mouse drag
+  function initRail() {
+    const rail = document.getElementById('rail');
+    if (!rail) return;
+    const segs = $$('.seg'), prev = $('#rail-prev'), next = $('#rail-next');
+    const cards = $$('.card', rail);
+    const stride = () => cards[0].getBoundingClientRect().width + 20;
 
-  function initLoader() {
-    const loader = document.getElementById('page-loader');
-    if (!loader) return;
+    const update = () => {
+      const max = rail.scrollWidth - rail.clientWidth;
+      const idx = Math.round(rail.scrollLeft / stride());
+      segs.forEach((s, i) => s.classList.toggle('on', i <= idx));
+      if (prev) prev.disabled = rail.scrollLeft <= 4;
+      if (next) next.disabled = rail.scrollLeft >= max - 4;
+    };
+    rail.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    prev && prev.addEventListener('click', () => rail.scrollBy({ left: -stride(), behavior: 'smooth' }));
+    next && next.addEventListener('click', () => rail.scrollBy({ left:  stride(), behavior: 'smooth' }));
 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        loader.classList.add('is-done');
-        setTimeout(() => loader.remove(), 700);
-      }, 800);
+    let down = false, startX = 0, startLeft = 0, moved = 0;
+    rail.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'mouse') return;
+      down = true; moved = 0; startX = e.clientX; startLeft = rail.scrollLeft;
     });
-  }
-
-  // ─── Active Nav highlight on scroll (single-page sections) ───────
-
-  function initScrollSpy() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav__link[href*="#"]');
-
-    if (!sections.length || !navLinks.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navLinks.forEach(link => {
-            link.classList.toggle(
-              'is-active',
-              link.getAttribute('href').endsWith('#' + entry.target.id)
-            );
-          });
-        }
-      });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-
-    sections.forEach(s => observer.observe(s));
-  }
-
-  // ─── Hover tilt on portfolio / service cards ──────────────────────
-
-  function initCardTilt() {
-    if (window.innerWidth <= 768) return;
-
-    document.querySelectorAll('.portfolio-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect  = card.getBoundingClientRect();
-        const cx    = rect.left + rect.width  / 2;
-        const cy    = rect.top  + rect.height / 2;
-        const dx    = (e.clientX - cx) / (rect.width  / 2);
-        const dy    = (e.clientY - cy) / (rect.height / 2);
-        card.style.transform = `translateY(-6px) rotateY(${dx * 3}deg) rotateX(${-dy * 3}deg)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
+    window.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - startX; moved = Math.max(moved, Math.abs(dx));
+      if (moved > 5) rail.classList.add('is-dragging');
+      rail.scrollLeft = startLeft - dx;
     });
+    window.addEventListener('pointerup', () => { if (!down) return; down = false; setTimeout(() => rail.classList.remove('is-dragging'), 0); });
+    rail.addEventListener('click', e => { if (moved > 5) { e.preventDefault(); moved = 0; } }, true);
+    update();
   }
 
-  // ─── Main Init ───────────────────────────────────────────────────
+  // Mobile menu
+  function initMenu() {
+    const btn = $('.burger'), menu = $('#menu');
+    if (!btn || !menu) return;
+    const set = open => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      menu.hidden = !open;
+      document.body.classList.toggle('no-scroll', open);
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', e => { if (e.target.closest('a')) set(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
+    window.addEventListener('resize', () => { if (innerWidth > 960) set(false); });
+  }
+
+  // Hero pipeline simulation (modelled on a real booking-pipeline architecture)
+  function initPipeline() {
+    const root = document.getElementById('pipeline');
+    if (!root) return;
+    const steps = $$('.pipe__step', root), chips = $$('.pipe__chip', root), log = $('.pipe__log', root);
+    const lines = [
+      'inbound email parsed · gear list detected',
+      'agent extracted 14 line items',
+      'inventory checked · quote drafted',
+      'draft queued · awaiting operator approval',
+      'approved by operator · reply sent',
+    ];
+    const states = ['RECEIVED', 'PROCESSING', 'DRAFTED', 'PENDING_APPROVAL', 'SENT'];
+    let i = -1, timer = null;
+
+    const show = n => {
+      steps.forEach((s, k) => {
+        s.classList.toggle('is-active', k === n);
+        s.classList.toggle('is-done', k < n);
+      });
+      chips.forEach((c, k) => { c.textContent = k <= n ? states[k] : 'IDLE'; });
+      const upto = Math.max(0, n);
+      log.innerHTML = lines.slice(Math.max(0, upto - 3), upto + 1).map(l => `<div>${l}</div>`).join('');
+    };
+    const tick = () => { i = (i + 1) % (steps.length + 1); if (i === steps.length) { show(-1); log.innerHTML = '<div>ready for next enquiry</div>'; return; } show(i); };
+
+    if (reduce) { show(steps.length - 1); return; }
+    const start = () => { if (!timer) { tick(); timer = setInterval(tick, 1700); } };
+    const stop  = () => { clearInterval(timer); timer = null; };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start() : stop())).observe(root);
+    } else start();
+  }
 
   function init() {
-    initCursor();
-    initMagnetic();
-    initReveal();
-    initCounters();
-    initHeroAnimations();
-    initParallax();
-    initPageTransitions();
-    initLoader();
-    initScrollSpy();
-
-    // Card tilt — after dynamic content renders
-    setTimeout(initCardTilt, 500);
-
-    // Re-init card tilt on dynamic portfolio page
-    document.addEventListener('kami:content-ready', () => {
-      setTimeout(initCardTilt, 100);
-    });
+    document.documentElement.classList.add('js');
+    initClock(); initReveal(); initAccordion(); initRail(); initMenu(); initPipeline();
   }
 
-  return { init };
-
+  window.KamiAnim = { init };
 })();

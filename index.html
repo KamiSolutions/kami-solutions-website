@@ -3,220 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Infrastructure For Ambitious Businesses | Kami Solutions</title>
-  <meta name="description" content="Kami Solutions is a premium African creative technology studio. We build websites, software, dashboards, and brands for ambitious businesses.">
+  <title>Kami Solutions — Digital infrastructure for ambitious businesses</title>
+  <meta name="description" content="Kami Solutions is a Johannesburg creative technology studio building AI-powered systems, cloud platforms, websites, and mobile apps for ambitious businesses.">
+  <meta name="theme-color" content="#0A0A0A">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
 </head>
 <body data-page="home">
+<div id="site-top"></div>
+<main id="main">
 
-  <!-- Cursor -->
-  <div class="cursor-dot"  id="cursor-dot"></div>
-  <div class="cursor-ring" id="cursor-ring"></div>
+<section class="hero">
+  <div class="container hero__grid">
+    <div>
+      <span class="mono kicker hero__kicker">Creative technology studio · Johannesburg, ZA</span>
+      <h1 class="display hero__title">
+        <span class="line"><span style="--i:0">Digital</span></span>
+        <span class="line"><span style="--i:1">infrastructure</span></span>
+        <span class="line"><span class="dim" style="--i:2">for ambitious</span></span>
+        <span class="line"><span class="dim" style="--i:3">businesses.</span></span>
+      </h1>
+      <div class="hero__lower">
+        <p class="lede">We design websites, software, systems, and brands that help African companies scale.</p>
+        <div class="hero__btns">
+          <a class="btn btn-gold" href="contact.html">Start a project <span class="btn__arrow" aria-hidden="true">↗</span></a>
+          <a class="btn btn-line" href="portfolio.html">See the work <span class="btn__arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
 
-  <!-- Page loader -->
-  <div class="page-loader" id="page-loader">
-    <span class="page-loader__logo">KAMI</span>
-    <div class="page-loader__bar-track">
-      <div class="page-loader__bar-fill"></div>
+    <aside class="pipe" id="pipeline" aria-label="Simulation of an AI booking pipeline with human approval">
+      <div class="pipe__head">
+        <span class="mono"><i class="dot"></i>Live simulation</span>
+        <span class="mono">booking-pipeline</span>
+      </div>
+      <div class="pipe__steps">
+        <div class="pipe__step"><span class="pipe__n">01</span><div><div class="pipe__name">Email in</div><div class="pipe__sub">Unstructured request arrives</div></div><span class="pipe__chip">IDLE</span></div>
+        <div class="pipe__step"><span class="pipe__n">02</span><div><div class="pipe__name">AI extraction</div><div class="pipe__sub">Items and dates, structured</div></div><span class="pipe__chip">IDLE</span></div>
+        <div class="pipe__step"><span class="pipe__n">03</span><div><div class="pipe__name">Quote draft</div><div class="pipe__sub">Live inventory check</div></div><span class="pipe__chip">IDLE</span></div>
+        <div class="pipe__step pipe__step--human"><span class="pipe__n">04</span><div><div class="pipe__name">Review</div><div class="pipe__sub">A person approves or edits</div></div><span class="pipe__chip">IDLE</span></div>
+        <div class="pipe__step"><span class="pipe__n">05</span><div><div class="pipe__name">Sent</div><div class="pipe__sub">Logged in the audit trail</div></div><span class="pipe__chip">IDLE</span></div>
+      </div>
+      <div class="pipe__log" aria-live="off"><div>ready for next enquiry</div></div>
+      <p class="pipe__note">Simulated · modelled on a production system built under NDA</p>
+    </aside>
+  </div>
+</section>
+
+<div class="container"><div class="stats" id="stats"></div></div>
+
+<div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee-track"></div></div>
+
+<section class="section" id="work">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="mono kicker">Selected work</span><h2 class="h2 reveal">Systems we have shipped.</h2></div>
+      <a class="btn btn-line" href="portfolio.html">All work <span class="btn__arrow" aria-hidden="true">↗</span></a>
+    </div>
+    <div class="work-list" id="work-list" data-limit="4" data-open="first"></div>
+  </div>
+</section>
+
+<section class="section rule-top" id="offerings" style="padding-bottom:clamp(56px,8vw,120px)">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="mono kicker">Offerings</span><h2 class="h2 reveal">Everything a growing business needs to ship.</h2></div>
+      <a class="btn btn-line" href="services.html">All services <span class="btn__arrow" aria-hidden="true">↗</span></a>
     </div>
   </div>
-
-  <!-- Page transition overlay -->
-  <div class="page-overlay" id="page-overlay"></div>
-
-  <!-- Navigation (injected by JS) -->
-  <div id="nav-root"></div>
-
-  <main>
-
-    <!-- ── HERO ──────────────────────────────────────────────────── -->
-    <section class="hero" id="hero">
-      <div class="hero__bg">
-        <div class="hero__grid"></div>
-        <div class="hero__glow"></div>
+  <div class="rail" id="rail" tabindex="0" aria-label="Services"></div>
+  <div class="container">
+    <div class="rail-ctl">
+      <div class="rail-ctl__bar" id="rail-segs" aria-hidden="true"></div>
+      <div class="rail-ctl__btns">
+        <button class="circle-btn" id="rail-prev" aria-label="Previous">←</button>
+        <button class="circle-btn" id="rail-next" aria-label="Next">→</button>
       </div>
-      <div class="hero__watermark" aria-hidden="true">KAMI</div>
+    </div>
+  </div>
+</section>
 
-      <div class="container hero__container">
-        <div class="hero__content">
+<section class="section rule-top" id="studio">
+  <div class="container">
+    <span class="mono kicker" style="margin-bottom:36px">The studio</span>
+    <p class="statement statement--wide reveal">
+      Kami is a Johannesburg studio led by developer Timothy Musama.
+      <span class="dim">We pair careful product design with serious engineering: AI pipelines, cloud infrastructure, web and mobile apps. Secure, tested, and built to last.</span>
+    </p>
+    <div class="statement-foot">
+      <a class="btn btn-line" href="about.html">Our story <span class="btn__arrow" aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
 
-          <span class="text-label hero__label hero-label-anim">
-            Creative Technology Studio
-          </span>
-
-          <h1 class="display-xl hero__headline">
-            <span class="hero-line-wrap">
-              <span class="hero-line-inner" style="--delay: 400ms;">Digital</span>
-            </span>
-            <span class="hero-line-wrap">
-              <span class="hero-line-inner italic" style="--delay: 520ms;">Infrastructure</span>
-            </span>
-            <span class="hero-line-wrap">
-              <span class="hero-line-inner" style="--delay: 640ms;">For Ambitious</span>
-            </span>
-            <span class="hero-line-wrap">
-              <span class="hero-line-inner italic" style="--delay: 760ms;">Businesses.</span>
-            </span>
-          </h1>
-
-          <div class="divider-accent hero__divider hero-divider-anim"></div>
-
-          <p class="text-xl hero__sub hero-sub-anim">
-            We design websites, software, systems, and brands<br>
-            that help African companies scale.
-          </p>
-
-          <div class="hero__actions hero-actions-anim">
-            <a href="contact.html" class="btn btn-primary" data-magnetic>
-              Book A Consultation
-            </a>
-            <a href="portfolio.html" class="btn btn-ghost">
-              View Our Work <span class="btn-arrow">→</span>
-            </a>
-          </div>
-
-        </div>
+<section class="cta-band section">
+  <div class="container">
+    <span class="mono kicker">Ready when you are</span>
+    <h2 class="cta-band__title reveal">Let's build something that holds up.</h2>
+    <div class="cta-band__row">
+      <div class="cta-band__contact">
+        <a href="mailto:musmatimothy@gmail.com">musmatimothy@gmail.com</a>
+        <a href="tel:+27681992586">+27 68 199 2586</a>
       </div>
+      <a class="btn btn-dark" href="contact.html">Start a project <span class="btn__arrow" aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
 
-      <div class="hero__scroll" aria-hidden="true">
-        <div class="scroll-indicator">
-          <span class="scroll-indicator__label">Scroll</span>
-          <div class="scroll-indicator__line">
-            <div class="scroll-indicator__dot"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── STATS ─────────────────────────────────────────────────── -->
-    <section class="stats-section section-sm" id="stats">
-      <div class="container">
-        <div id="stats-grid"></div>
-      </div>
-    </section>
-
-    <!-- ── SERVICES PREVIEW ──────────────────────────────────────── -->
-    <section class="section" id="services-preview">
-      <div class="container">
-        <div class="section-header">
-          <span class="text-label section-label reveal">What We Do</span>
-          <h2 class="display-md section-heading reveal reveal-d1">
-            Everything Your<br>Business Needs to Scale
-          </h2>
-        </div>
-        <div class="services-preview__grid" id="services-preview-grid"></div>
-        <div class="services-preview__cta reveal" style="margin-top:56px;text-align:center;">
-          <a href="services.html" class="btn btn-ghost">
-            Explore All Services <span class="btn-arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── WORK PREVIEW ──────────────────────────────────────────── -->
-    <section class="section work-preview" id="work-preview">
-      <div class="container">
-        <div class="section-header">
-          <span class="text-label section-label reveal">Selected Work</span>
-          <h2 class="display-md section-heading reveal reveal-d1">
-            Projects That<br>Moved the Needle
-          </h2>
-        </div>
-        <div class="work-preview__grid" id="work-preview-grid"></div>
-        <div class="work-preview__cta reveal" style="margin-top:56px;text-align:center;">
-          <a href="portfolio.html" class="btn btn-ghost">
-            View All Projects <span class="btn-arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── ABOUT PREVIEW ─────────────────────────────────────────── -->
-    <section class="section" id="about-preview">
-      <div class="container">
-        <div class="about-preview__inner">
-
-          <div class="about-preview__content">
-            <span class="text-label section-label reveal">Our Difference</span>
-            <h2 class="display-md reveal reveal-d1">
-              We Build Digital<br>Infrastructure.<br>Not Just Websites.
-            </h2>
-            <p class="text-lg text-second reveal reveal-d2">
-              Kami Solutions is a premium African creative technology studio. We combine world-class
-              design standards with deep understanding of the African market to help ambitious
-              businesses compete at the highest level.
-            </p>
-            <a href="about.html" class="btn btn-ghost reveal reveal-d3">
-              Our Story <span class="btn-arrow">→</span>
-            </a>
-          </div>
-
-          <div class="about-preview__visual reveal reveal-d2">
-            <div class="about-preview__box">
-              <div class="about-preview__headline display-md font-heading">
-                <span class="line1">Africa.</span>
-                <span class="line2">First.</span>
-              </div>
-              <p class="about-preview__caption">
-                Built for the continent.<br>Held to international standards.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ── TESTIMONIALS ──────────────────────────────────────────── -->
-    <section class="section testimonials-section" id="testimonials">
-      <div class="container">
-        <div class="section-header">
-          <span class="text-label section-label reveal">Client Results</span>
-          <h2 class="display-md section-heading reveal reveal-d1">What Clients Say</h2>
-        </div>
-        <div id="testimonials-grid"></div>
-      </div>
-    </section>
-
-    <!-- ── CTA ───────────────────────────────────────────────────── -->
-    <section class="section cta-section" id="cta">
-      <div class="cta-glow" style="left:50%;top:50%;transform:translate(-50%,-50%);"></div>
-      <div class="container">
-        <div class="cta-section__inner reveal">
-          <span class="text-label">Ready to Scale?</span>
-          <h2 class="display-lg" style="text-align:center;">
-            Let's Build Something<br>
-            <span class="text-accent italic">Extraordinary</span>
-          </h2>
-          <p class="text-lg text-second" style="text-align:center;max-width:52ch;">
-            Book a consultation and let's discuss how Kami Solutions can build the digital
-            infrastructure your business deserves.
-          </p>
-          <div class="cta-section__actions">
-            <a href="contact.html" class="btn btn-primary" data-magnetic>
-              Book A Consultation
-            </a>
-            <a href="https://wa.me/27720000000?text=Hi%20Kami%20Solutions%2C%20I'd%20like%20to%20discuss%20a%20project."
-               target="_blank" rel="noopener" class="btn btn-ghost">
-              WhatsApp Us <span class="btn-arrow">→</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer (injected by JS) -->
-  <div id="footer-root"></div>
-
-  <script src="js/config.js"></script>
-  <script src="js/components.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/app.js"></script>
+</main>
+<div id="site-bottom"></div>
+<script src="js/config.js"></script>
+<script src="js/components.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

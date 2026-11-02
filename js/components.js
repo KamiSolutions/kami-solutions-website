@@ -1,638 +1,293 @@
 /**
- * KAMI SOLUTIONS — COMPONENT RENDERER
- * ──────────────────────────────────────
- * Reads KAMI_CONFIG and renders all shared and page-specific
- * HTML sections. Changing config.js updates everything here.
+ * Renders shared chrome (header, footer) and config-driven sections.
+ * All content comes from KAMI_CONFIG (js/config.js).
  */
+(function () {
+  const cfg  = KAMI_CONFIG;
+  const page = document.body.dataset.page;
+  const $    = (sel, root = document) => root.querySelector(sel);
+  const mount = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; return el; };
 
-const KamiComponents = (() => {
+  const arrow = '<span class="btn__arrow" aria-hidden="true">↗</span>';
 
-  const cfg = KAMI_CONFIG;
+  // ── Header / menu ────────────────────────────────────────────
+  function renderTop() {
+    const links = cfg.navigation.map(n => `
+      <li><a href="${n.href}" ${n.page === page ? 'aria-current="page"' : ''}>
+        <span class="nav__kicker">${n.kicker}</span><span class="nav__label">${n.label}</span>
+      </a></li>`).join('');
 
-  // ─── Helpers ────────────────────────────────────────────────────
+    const menuLinks = cfg.navigation.map((n, i) => `
+      <a href="${n.href}"><span class="mono">0${i + 1}</span>${n.label}</a>`).join('');
 
-  function qs(sel, ctx = document) { return ctx.querySelector(sel); }
-  function inject(id, html) {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = html;
+    mount('site-top', `
+      <a class="skip-link" href="#main">Skip to content</a>
+      <div class="utility"><div class="container utility__inner">
+        <span class="mono utility__left">Kami Solutions® — Creative technology studio</span>
+        <span class="mono utility__mid" id="clock">Johannesburg</span>
+        <span class="mono utility__status"><i class="dot"></i>Open for projects</span>
+      </div></div>
+      <header class="site-header"><div class="container header__inner">
+        <a class="logo" href="index.html" aria-label="Kami Solutions, home">kami<sup>®</sup></a>
+        <nav class="nav" aria-label="Primary"><ul>${links}</ul></nav>
+        <a class="btn btn-gold header__cta" href="contact.html">Start a project ${arrow}</a>
+        <button class="burger" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
+      </div></header>
+      <div class="menu" id="menu" hidden>
+        <nav class="menu__links" aria-label="Mobile">${menuLinks}</nav>
+        <div class="menu__foot">
+          <span class="mono">Get in touch</span>
+          <a href="mailto:${cfg.contact.email}">${cfg.contact.email}</a>
+          <a href="tel:${cfg.contact.phoneHref}">${cfg.contact.phone}</a>
+        </div>
+      </div>`);
   }
 
-  function initials(name) {
-    return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  }
+  // ── Footer + floating pills ──────────────────────────────────
+  function renderBottom() {
+    const c = cfg.contact, s = cfg.social;
+    const wa = `https://wa.me/${c.whatsapp}?text=${encodeURIComponent(c.whatsappMessage)}`;
 
-  function currentPage() {
-    return document.body.dataset.page || '';
-  }
-
-  function activeLink(href) {
-    const path = window.location.pathname;
-    return path.endsWith(href) ? 'is-active' : '';
-  }
-
-  // ─── Navigation ─────────────────────────────────────────────────
-
-  function renderNav() {
-    const links = cfg.navigation.links.map(l => `
-      <li>
-        <a href="${l.href}" class="nav__link ${activeLink(l.href)}">${l.label}</a>
-      </li>
-    `).join('');
-
-    const mobileLinks = cfg.navigation.links.map(l => `
-      <li>
-        <a href="${l.href}" class="mobile-menu__link">${l.label}</a>
-      </li>
-    `).join('');
-
-    const html = `
-      <div class="nav" id="nav">
-        <div class="container">
-          <div class="nav__inner">
-            <a href="index.html" class="nav__logo">
-              <span class="nav__logo-main">${cfg.company.shortName}</span>
-              <span class="nav__logo-sub">SOLUTIONS</span>
-            </a>
-
-            <ul class="nav__links">${links}</ul>
-
-            <div class="nav__right">
-              <a href="${cfg.navigation.cta.href}" class="btn btn-primary btn-sm nav__cta" data-magnetic>
-                ${cfg.navigation.cta.label}
-              </a>
-              <button class="nav__hamburger" id="nav-hamburger" aria-label="Open Menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-              </button>
-            </div>
+    mount('site-bottom', `
+      <footer class="site-footer"><div class="container">
+        <div class="footer__grid">
+          <div class="footer__col">
+            <a class="logo" href="index.html" aria-label="Kami Solutions, home">kami<sup>®</sup></a>
+            <p class="footer__blurb">${cfg.company.description}</p>
+          </div>
+          <div class="footer__col">
+            <h4 class="mono kicker">Studio</h4>
+            <ul>${cfg.navigation.map(n => `<li><a href="${n.href}">${n.label}</a></li>`).join('')}</ul>
+          </div>
+          <div class="footer__col">
+            <h4 class="mono kicker">Offerings</h4>
+            <ul>${cfg.services.map(sv => `<li><a href="services.html#${sv.id}">${sv.title}</a></li>`).join('')}</ul>
+          </div>
+          <div class="footer__col">
+            <h4 class="mono kicker">Connect</h4>
+            <ul>
+              <li><a href="mailto:${c.email}">${c.email}</a></li>
+              <li><a href="tel:${c.phoneHref}">${c.phone}</a></li>
+              <li><a href="${wa}" target="_blank" rel="noopener">WhatsApp</a></li>
+              <li><a href="${s.linkedin}" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="${s.github}" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
           </div>
         </div>
-      </div>
-
-      <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-        <ul class="mobile-menu__links">${mobileLinks}</ul>
-        <div class="mobile-menu__footer">
-          <span class="mobile-menu__contact">${cfg.contact.email}</span>
-          <a href="${cfg.navigation.cta.href}" class="btn btn-primary btn-sm">${cfg.navigation.cta.label}</a>
+        <div class="footer__legal">
+          <span class="mono">© ${new Date().getFullYear()} Kami Solutions</span>
+          <span class="mono">${c.address}</span>
         </div>
-      </div>
-    `;
-
-    inject('nav-root', html);
-    initNavBehavior();
+        <div class="footer__word" aria-hidden="true">KAMI</div>
+      </div></footer>
+      ${page === 'contact' ? '' : `
+      <div class="float">
+        <a class="float__alt" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="float__primary" href="contact.html">Start a project</a>
+      </div>`}`);
   }
 
-  function initNavBehavior() {
-    const nav       = qs('#nav');
-    const hamburger = qs('#nav-hamburger');
-    const mobileMenu = qs('#mobile-menu');
-
-    if (!nav || !hamburger || !mobileMenu) return;
-
-    // Scroll class
-    const onScroll = () => {
-      nav.classList.toggle('is-scrolled', window.scrollY > 50);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    // Hamburger toggle
-    hamburger.addEventListener('click', () => {
-      const open = hamburger.classList.toggle('is-open');
-      mobileMenu.classList.toggle('is-open', open);
-      hamburger.setAttribute('aria-expanded', open);
-      mobileMenu.setAttribute('aria-hidden', !open);
-      document.body.style.overflow = open ? 'hidden' : '';
-    });
-
-    // Close on mobile link click
-    mobileMenu.querySelectorAll('.mobile-menu__link').forEach(link => {
-      link.addEventListener('click', () => {
-        hamburger.classList.remove('is-open');
-        mobileMenu.classList.remove('is-open');
-        document.body.style.overflow = '';
-      });
-    });
-  }
-
-  // ─── Footer ─────────────────────────────────────────────────────
-
-  function renderFooter() {
-    const year = new Date().getFullYear();
-
-    const columns = cfg.footer.columns.map(col => `
-      <div class="footer__col">
-        <span class="footer__col-heading">${col.heading}</span>
-        <ul class="footer__col-links">
-          ${col.links.map(l => `
-            <li><a href="${l.href}" class="footer__col-link">${l.label}</a></li>
-          `).join('')}
-        </ul>
-      </div>
-    `).join('');
-
-    const social = Object.entries(cfg.social).map(([platform, url]) => `
-      <a href="${url}" class="footer__social-link" target="_blank" rel="noopener" aria-label="${platform}">
-        ${platform.slice(0, 2).toUpperCase()}
-      </a>
-    `).join('');
-
-    const legalLinks = cfg.footer.legal.links.map(l =>
-      `<a href="${l.href}" class="footer__legal-link">${l.label}</a>`
-    ).join('');
-
-    const html = `
-      <div class="footer">
-        <div class="container">
-          <div class="footer__top">
-            <div class="footer__brand">
-              <span class="footer__logo-text">${cfg.company.shortName} SOLUTIONS</span>
-              <p class="footer__tagline">${cfg.footer.tagline}</p>
-              <div class="footer__social">${social}</div>
-            </div>
-            ${columns}
-          </div>
-          <div class="footer__bottom">
-            <p class="footer__copy">© ${year} ${cfg.company.name}. All rights reserved.</p>
-            <div class="footer__legal">${legalLinks}</div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    inject('footer-root', html);
-  }
-
-  // ─── Homepage: Stats ─────────────────────────────────────────────
-
+  // ── Home: stats + marquee ────────────────────────────────────
   function renderStats() {
-    const el = document.getElementById('stats-grid');
-    if (!el) return;
-
-    el.className = 'stats-grid';
-    el.innerHTML = cfg.hero.stats.map((s, i) => `
-      <div class="stat-item reveal reveal-d${i + 1}">
-        <span class="stat-item__value" data-counter="${s.value}">${s.value}</span>
-        <span class="stat-item__label">${s.label}</span>
-      </div>
-    `).join('');
+    mount('stats', cfg.hero.stats.map((s, i) => `
+      <div class="stat reveal" style="--d:${i * 80}ms">
+        <span class="stat__num" data-count="${s.value}">${s.value}</span>
+        <span class="stat__label mono">${s.label}</span>
+      </div>`).join(''));
   }
 
-  // ─── Homepage: Services Preview ──────────────────────────────────
-
-  function renderServicesPreview() {
-    const el = document.getElementById('services-preview-grid');
-    if (!el) return;
-
-    el.innerHTML = cfg.services.map((s, i) => `
-      <a href="services.html#${s.id}" class="service-card reveal reveal-d${Math.min(i + 1, 6)}">
-        <div class="service-card__header">
-          <span class="service-card__icon">${s.icon}</span>
-          <span class="service-card__number">${s.number}</span>
-        </div>
-        <h3 class="service-card__title">${s.title}</h3>
-        <p class="service-card__tagline">${s.tagline}</p>
-        <p class="service-card__desc">${s.description}</p>
-        <div class="service-card__footer">
-          <span class="service-card__price">${s.startingPrice}</span>
-          <span class="service-card__arrow">↗</span>
-        </div>
-      </a>
-    `).join('');
+  function renderMarquee() {
+    const items = cfg.stack.map(t => `<span class="marquee__item">${t}</span>`).join('');
+    mount('marquee-track', items + items);
   }
 
-  // ─── Homepage: Work Preview ──────────────────────────────────────
-
-  function renderWorkPreview() {
-    const el = document.getElementById('work-preview-grid');
+  // ── Work rows ────────────────────────────────────────────────
+  function renderWork() {
+    const el = document.getElementById('work-list');
     if (!el) return;
+    const limit = parseInt(el.dataset.limit || cfg.portfolio.length, 10);
+    const openFirst = el.dataset.open === 'first';
 
-    el.innerHTML = cfg.portfolio.slice(0, 2).map((p, i) => `
-      <a href="portfolio.html" class="portfolio-card reveal reveal-d${i + 1}" data-project="${p.id}">
-        <div class="portfolio-card__bg" style="background: ${p.cardBg};"></div>
-        <div class="portfolio-card__overlay"></div>
-        <div class="portfolio-card__content">
-          <div class="portfolio-card__top">
-            <span class="portfolio-card__category">${p.category}</span>
-            <span class="portfolio-card__year">${p.year}</span>
-          </div>
-          <div class="portfolio-card__bottom">
-            <span class="portfolio-card__client">${p.client}</span>
-            <h3 class="portfolio-card__title">${p.title}</h3>
-            <div class="portfolio-card__tags">
-              ${p.tags.map(t => `<span class="portfolio-card__tag">${t}</span>`).join('')}
+    el.innerHTML = cfg.portfolio.slice(0, limit).map((p, i) => {
+      const open = openFirst && i === 0;
+      const links = [
+        p.live ? `<a class="btn btn-line" href="${p.live}" target="_blank" rel="noopener">Live site ${arrow}</a>` : '',
+        p.repo ? `<a class="btn btn-line" href="${p.repo}" target="_blank" rel="noopener">Source code ${arrow}</a>` : '',
+      ].join('');
+      return `
+      <article class="work-row reveal ${open ? 'is-open' : ''}" id="${p.id}">
+        <button class="work-row__head" aria-expanded="${open}" aria-controls="${p.id}-body">
+          <span class="work-row__idx">${String(i + 1).padStart(2, '0')}</span>
+          <span class="work-row__title">${p.title}</span>
+          <span class="work-row__tagcell"><span class="tag">${p.category}</span></span>
+          <span class="work-row__year">${p.year || ''}</span>
+          <span class="work-row__icon" aria-hidden="true"></span>
+        </button>
+        <div class="work-row__body" id="${p.id}-body" role="region" aria-label="${p.title} details">
+          <div class="work-row__inner"><div class="work-row__content">
+            <div class="work-row__meta">
+              <span class="work-row__client mono">${[p.client, p.year].filter(Boolean).join(' · ')}</span>
+              <div class="work-row__stats">${p.stats.map(s => `<div class="work-row__stat"><span class="mono">${s.label}</span><b>${s.value}</b></div>`).join('')}</div>
+              <div class="work-row__tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+              ${links ? `<div class="work-row__links">${links}</div>` : ''}
             </div>
-          </div>
+            <div class="work-row__cols">
+              <div><h4 class="mono kicker">The challenge</h4><p>${p.challenge}</p></div>
+              <div><h4 class="mono kicker">The solution</h4><p>${p.solution}</p></div>
+              <div><h4 class="mono kicker">How it was built</h4><p>${p.process}</p></div>
+              <div><h4 class="mono kicker">The outcome</h4><p>${p.outcome}</p></div>
+            </div>
+          </div></div>
         </div>
-      </a>
-    `).join('');
+      </article>`;
+    }).join('');
   }
 
-  // ─── Homepage: Testimonials ──────────────────────────────────────
-
-  function renderTestimonials() {
-    const el = document.getElementById('testimonials-grid');
-    if (!el) return;
-
-    el.className = 'testimonials-grid';
-    el.innerHTML = cfg.testimonials.map((t, i) => `
-      <div class="testimonial-card reveal reveal-d${i + 1}">
-        <span class="testimonial-card__mark">"</span>
-        <p class="testimonial-card__quote">${t.quote}</p>
-        <div class="testimonial-card__author">
-          <div class="testimonial-card__avatar">${initials(t.author)}</div>
-          <div>
-            <p class="testimonial-card__name">${t.author}</p>
-            <p class="testimonial-card__role">${t.role}, ${t.company}</p>
-          </div>
-        </div>
-      </div>
-    `).join('');
+  // ── Services: rail (home) + list (services page) ─────────────
+  function renderRail() {
+    const rail = document.getElementById('rail');
+    if (!rail) return;
+    rail.innerHTML = cfg.services.map(s => `
+      <a class="card" href="services.html#${s.id}" draggable="false">
+        <div class="card__top"><span class="mono kicker">Offering ${s.number}</span><span class="mono">${s.deliveryTime}</span></div>
+        <div class="card__num" aria-hidden="true">${s.number}</div>
+        <h3 class="h3 card__title">${s.title}</h3>
+        <p class="card__tagline">${s.tagline}</p>
+        <p class="card__desc">${s.description}</p>
+        <ul class="card__list">${s.features.slice(0, 4).map(f => `<li>${f}</li>`).join('')}</ul>
+        <div class="card__foot"><span class="card__price">${s.startingPrice}</span><span class="btn__arrow" aria-hidden="true">↗</span></div>
+      </a>`).join('');
+    mount('rail-segs', cfg.services.map(() => '<span class="seg"></span>').join(''));
   }
-
-  // ─── Services Page ────────────────────────────────────────────────
 
   function renderServicesPage() {
-    const el = document.getElementById('services-page-grid');
-    if (!el) return;
+    mount('services-list', cfg.services.map(s => `
+      <section class="svc" id="${s.id}">
+        <div class="svc__side reveal">
+          <span class="svc__num mono kicker">Offering ${s.number}</span>
+          <h2 class="h2">${s.title}</h2>
+          <div class="svc__facts"><span class="tag">${s.startingPrice}</span><span class="tag">${s.deliveryTime}</span></div>
+        </div>
+        <div class="reveal">
+          <p class="h3 svc__tagline">${s.tagline}</p>
+          <p class="lede">${s.description}</p>
+          <ul class="svc__features">${s.features.map(f => `<li>${f}</li>`).join('')}</ul>
+          <a class="btn btn-gold svc__go" href="contact.html?service=${s.id}">Start this project ${arrow}</a>
+        </div>
+      </section>`).join(''));
 
-    el.innerHTML = cfg.services.map((s, i) => `
-      <div class="service-card service-card--large reveal reveal-d${Math.min(i % 2 + 1, 2)}" id="${s.id}">
-        <div class="service-card__header">
-          <span class="service-card__icon">${s.icon}</span>
-          <span class="service-card__number">${s.number}</span>
-        </div>
-        <h2 class="service-card__title">${s.title}</h2>
-        <p class="service-card__tagline">${s.tagline}</p>
-        <p class="service-card__desc">${s.description}</p>
-        <ul class="service-card__features">
-          ${s.features.map(f => `<li class="service-card__feature">${f}</li>`).join('')}
-        </ul>
-        <div class="service-card__footer">
-          <span class="service-card__price">${s.startingPrice}</span>
-          <span class="service-card__time">${s.deliveryTime}</span>
-        </div>
-      </div>
-    `).join('');
+    mount('process-steps', cfg.process.map((p, i) => `
+      <div class="step reveal" style="--d:${i * 80}ms"><span class="mono">${p.n}</span><h3 class="h3">${p.title}</h3><p>${p.text}</p></div>`).join(''));
   }
 
-  // ─── Portfolio Page ───────────────────────────────────────────────
-
-  function renderPortfolioPage() {
-    const gridEl     = document.getElementById('portfolio-grid');
-    const filtersEl  = document.getElementById('portfolio-filters');
-    const panelEl    = document.getElementById('case-study-panel');
-    const backdropEl = document.getElementById('panel-backdrop');
-
-    if (!gridEl) return;
-
-    // Build category list
-    const categories = ['All', ...new Set(cfg.portfolio.map(p => p.category))];
-
-    if (filtersEl) {
-      filtersEl.innerHTML = categories.map((cat, i) => `
-        <button class="filter-btn ${i === 0 ? 'is-active' : ''}" data-filter="${cat}">
-          ${cat}
-        </button>
-      `).join('');
-    }
-
-    // Build cards
-    gridEl.innerHTML = cfg.portfolio.map((p, i) => `
-      <div class="portfolio-card reveal reveal-d${i % 2 + 1}" data-category="${p.category}" data-project="${p.id}">
-        <div class="portfolio-card__bg" style="background: ${p.cardBg};"></div>
-        <div class="portfolio-card__overlay"></div>
-        <div class="portfolio-card__content">
-          <div class="portfolio-card__top">
-            <span class="portfolio-card__category">${p.category}</span>
-            <span class="portfolio-card__year">${p.year}</span>
-          </div>
-          <div class="portfolio-card__bottom">
-            <span class="portfolio-card__client">${p.client}</span>
-            <h3 class="portfolio-card__title">${p.title}</h3>
-            <div class="portfolio-card__tags">
-              ${p.tags.map(t => `<span class="portfolio-card__tag">${t}</span>`).join('')}
-            </div>
+  // ── About ────────────────────────────────────────────────────
+  function renderAbout() {
+    mount('about-story', cfg.about.story.map(t => `<p class="reveal">${t}</p>`).join(''));
+    mount('about-mv', `
+      <div class="mv__card reveal"><span class="mono kicker">Mission</span><p>${cfg.about.mission}</p></div>
+      <div class="mv__card reveal" style="--d:100ms"><span class="mono kicker">Vision</span><p>${cfg.about.vision}</p></div>`);
+    mount('about-values', cfg.about.values.map((v, i) => `
+      <div class="value reveal"><span class="mono">0${i + 1}</span><h3 class="h3">${v.title}</h3><p>${v.description}</p></div>`).join(''));
+    mount('about-why', cfg.about.why.map((w, i) => `
+      <div class="row reveal"><span class="mono gold">0${i + 1}</span><h3 class="h3">${w.title}</h3><p>${w.text}</p></div>`).join(''));
+    mount('about-team', cfg.team.map(m => `
+      <div class="person reveal">
+        <div class="person__mark" aria-hidden="true">${m.initials}</div>
+        <div>
+          <h3 class="h2">${m.name}</h3>
+          <span class="mono kicker" style="margin-top:14px">${m.role}</span>
+          <p class="person__bio lede">${m.bio}</p>
+          <div class="person__links">
+            <a class="btn btn-line" href="${cfg.social.linkedin}" target="_blank" rel="noopener">LinkedIn ${arrow}</a>
+            <a class="btn btn-line" href="${cfg.social.github}" target="_blank" rel="noopener">GitHub ${arrow}</a>
           </div>
         </div>
-      </div>
-    `).join('');
-
-    // Filter behavior
-    if (filtersEl) {
-      filtersEl.addEventListener('click', e => {
-        const btn = e.target.closest('.filter-btn');
-        if (!btn) return;
-
-        filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-
-        const filter = btn.dataset.filter;
-        gridEl.querySelectorAll('.portfolio-card').forEach(card => {
-          const match = filter === 'All' || card.dataset.category === filter;
-          card.style.opacity   = match ? '1' : '0.2';
-          card.style.transform = match ? '' : 'scale(0.97)';
-          card.style.transition = 'opacity 350ms ease, transform 350ms ease';
-          card.style.pointerEvents = match ? 'auto' : 'none';
-        });
-      });
-    }
-
-    // Case study panel
-    if (panelEl && backdropEl) {
-      const openPanel = (id) => {
-        const project = cfg.portfolio.find(p => p.id === id);
-        if (!project) return;
-
-        panelEl.innerHTML = buildCaseStudyHTML(project);
-        panelEl.classList.add('is-open');
-        backdropEl.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-
-        panelEl.querySelector('.case-study-panel__close').addEventListener('click', closePanel);
-      };
-
-      const closePanel = () => {
-        panelEl.classList.remove('is-open');
-        backdropEl.classList.remove('is-open');
-        document.body.style.overflow = '';
-      };
-
-      gridEl.addEventListener('click', e => {
-        const card = e.target.closest('.portfolio-card');
-        if (card) openPanel(card.dataset.project);
-      });
-
-      backdropEl.addEventListener('click', closePanel);
-    }
+      </div>`).join(''));
   }
 
-  function buildCaseStudyHTML(p) {
-    const stats = p.stats.map(s => `
-      <div class="case-study-panel__stat">
-        <span class="case-study-panel__stat-value">${s.value}</span>
-        <span class="case-study-panel__stat-label">${s.label}</span>
-      </div>
-    `).join('');
-
-    const tags = p.tags.map(t =>
-      `<span class="badge badge-muted" style="margin-right:6px;margin-bottom:6px;">${t}</span>`
-    ).join('');
-
-    return `
-      <button class="case-study-panel__close" aria-label="Close">✕</button>
-      <span class="text-label case-study-panel__category">${p.category}</span>
-      <h2 class="case-study-panel__title">${p.title}</h2>
-      <span class="case-study-panel__client">${p.client} · ${p.year}</span>
-      <div class="case-study-panel__thumb" style="background:${p.cardBg};"></div>
-      <div class="case-study-panel__stats">${stats}</div>
-      <div style="margin-bottom:24px;">${tags}</div>
-      <div class="case-study-section">
-        <span class="case-study-section__heading">The Challenge</span>
-        <p class="case-study-section__body">${p.challenge}</p>
-      </div>
-      <div class="case-study-section">
-        <span class="case-study-section__heading">Our Solution</span>
-        <p class="case-study-section__body">${p.solution}</p>
-      </div>
-      <div class="case-study-section">
-        <span class="case-study-section__heading">Our Process</span>
-        <p class="case-study-section__body">${p.process}</p>
-      </div>
-      <div class="case-study-section">
-        <span class="case-study-section__heading">The Outcome</span>
-        <p class="case-study-section__body">${p.outcome}</p>
-      </div>
-    `;
+  function renderApproach() {
+    mount('approach', cfg.approach.map((a, i) => `
+      <div class="row reveal"><span class="mono gold">0${i + 1}</span><h3 class="h3">${a.title}</h3><p>${a.text}</p></div>`).join(''));
   }
 
-  // ─── About Page ───────────────────────────────────────────────────
+  // ── Contact ──────────────────────────────────────────────────
+  function renderContact() {
+    const c = cfg.contact, s = cfg.social;
+    const wa = `https://wa.me/${c.whatsapp}?text=${encodeURIComponent(c.whatsappMessage)}`;
+    mount('contact-list', `
+      <div class="contact-item"><span class="mono">Email</span><a href="mailto:${c.email}">${c.email}</a></div>
+      <div class="contact-item"><span class="mono">Phone</span><a href="tel:${c.phoneHref}">${c.phone}</a></div>
+      <div class="contact-item"><span class="mono">WhatsApp</span><a href="${wa}" target="_blank" rel="noopener">Chat on WhatsApp ↗</a></div>
+      <div class="contact-item"><span class="mono">Location</span><p>${c.address}</p></div>
+      <div class="contact-item"><span class="mono">Elsewhere</span>
+        <a href="${s.linkedin}" target="_blank" rel="noopener">LinkedIn ↗</a> &nbsp; <a href="${s.github}" target="_blank" rel="noopener">GitHub ↗</a></div>`);
 
-  function renderAboutPage() {
-    const storyEl  = document.getElementById('about-story-content');
-    const valuesEl = document.getElementById('about-values-grid');
-    const teamEl   = document.getElementById('about-team-grid');
-    const missionEl = document.getElementById('about-mission-grid');
-
-    if (storyEl) {
-      storyEl.innerHTML = cfg.about.story.map(para => `
-        <p class="about-story__p reveal">${para}</p>
-      `).join('');
-    }
-
-    if (valuesEl) {
-      valuesEl.innerHTML = cfg.about.values.map((v, i) => `
-        <div class="value-card reveal reveal-d${i % 2 + 1}">
-          <span class="value-card__number">0${i + 1}</span>
-          <h3 class="value-card__title">${v.title}</h3>
-          <p class="value-card__desc">${v.description}</p>
-        </div>
-      `).join('');
-    }
-
-    if (teamEl) {
-      teamEl.innerHTML = cfg.team.map(member => `
-        <div class="team-card reveal">
-          <div class="team-card__avatar">
-            ${member.image
-              ? `<img src="${member.image}" alt="${member.name}">`
-              : initials(member.name)
-            }
+    const form = document.getElementById('contact-form-mount');
+    if (form) {
+      const opts = cfg.services.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
+      form.innerHTML = `
+        <form class="form" id="contact-form" novalidate>
+          <div class="form__row">
+            <div class="field"><label for="name">Full name *</label><input id="name" name="name" type="text" autocomplete="name" placeholder="Your full name" required><span class="field__err">Please enter your name.</span></div>
+            <div class="field"><label for="company">Company</label><input id="company" name="company" type="text" autocomplete="organization" placeholder="Your company"></div>
           </div>
-          <h3 class="team-card__name">${member.name}</h3>
-          <span class="team-card__role">${member.role}</span>
-          <p class="team-card__bio">${member.bio}</p>
-        </div>
-      `).join('');
-    }
-
-    if (missionEl) {
-      missionEl.innerHTML = `
-        <div class="mission-block reveal reveal-d1">
-          <span class="mission-block__heading">Our Mission</span>
-          <p class="mission-block__text">${cfg.about.mission}</p>
-        </div>
-        <div class="mission-block reveal reveal-d2">
-          <span class="mission-block__heading">Our Vision</span>
-          <p class="mission-block__text">${cfg.about.vision}</p>
-        </div>
-      `;
-    }
-  }
-
-  // ─── Contact Page ─────────────────────────────────────────────────
-
-  function renderContactPage() {
-    const infoEl = document.getElementById('contact-info');
-    const formEl = document.getElementById('contact-form-container');
-
-    if (infoEl) {
-      const waUrl = `https://wa.me/${cfg.contact.whatsapp}?text=${encodeURIComponent(cfg.contact.whatsappMessage)}`;
-
-      infoEl.innerHTML = `
-        <div class="contact-info">
-          <div class="contact-info-item">
-            <span class="contact-info-item__label">Email</span>
-            <p class="contact-info-item__value">
-              <a href="mailto:${cfg.contact.email}">${cfg.contact.email}</a>
-            </p>
+          <div class="form__row">
+            <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required><span class="field__err">Please enter a valid email.</span></div>
+            <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+27 XX XXX XXXX"></div>
           </div>
-          <div class="contact-info-item">
-            <span class="contact-info-item__label">Phone</span>
-            <p class="contact-info-item__value">
-              <a href="tel:${cfg.contact.phone}">${cfg.contact.phone}</a>
-            </p>
+          <div class="form__row">
+            <div class="field"><label for="service">Service</label><select id="service" name="service"><option value="">Select a service</option>${opts}<option value="multiple">Multiple services</option><option value="unsure">Not sure yet</option></select></div>
+            <div class="field"><label for="budget">Budget</label><select id="budget" name="budget"><option value="">Select a range</option><option value="R5,000 – R15,000">R5,000 – R15,000</option><option value="R15,000 – R30,000">R15,000 – R30,000</option><option value="R30,000 – R60,000">R30,000 – R60,000</option><option value="R60,000+">R60,000+</option><option value="Prefer to discuss">Prefer to discuss</option></select></div>
           </div>
-          <div class="contact-info-item">
-            <span class="contact-info-item__label">Location</span>
-            <p class="contact-info-item__value">${cfg.contact.address}</p>
-          </div>
-          <div class="contact-info-item">
-            <span class="contact-info-item__label">WhatsApp</span>
-            <a href="${waUrl}" target="_blank" rel="noopener" class="contact-whatsapp">
-              ↗ Chat on WhatsApp
-            </a>
-          </div>
-        </div>
-      `;
-    }
-
-    if (formEl) {
-      const serviceOptions = cfg.services.map(s =>
-        `<option value="${s.id}">${s.title}</option>`
-      ).join('');
-
-      formEl.innerHTML = `
-        <form class="contact-form" id="contact-form" novalidate>
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label" for="name">Full Name *</label>
-              <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="company">Company / Business</label>
-              <input type="text" id="company" name="company" class="form-input" placeholder="Your company name">
-            </div>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label" for="email">Email Address *</label>
-              <input type="email" id="email" name="email" class="form-input" placeholder="hello@yourcompany.com" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone" class="form-input" placeholder="+27 XX XXX XXXX">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="service">Service Required</label>
-            <select id="service" name="service" class="form-select">
-              <option value="" disabled selected>Select a service</option>
-              ${serviceOptions}
-              <option value="multiple">Multiple Services</option>
-              <option value="unsure">Not sure yet</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="budget">Approximate Budget</label>
-            <select id="budget" name="budget" class="form-select">
-              <option value="" disabled selected>Select a budget range</option>
-              <option value="5k-15k">R5,000 – R15,000</option>
-              <option value="15k-30k">R15,000 – R30,000</option>
-              <option value="30k-60k">R30,000 – R60,000</option>
-              <option value="60k+">R60,000+</option>
-              <option value="discuss">Prefer to discuss</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="message">Project Description *</label>
-            <textarea id="message" name="message" class="form-textarea" placeholder="Tell us about your project. What are you trying to achieve? What does success look like?" required></textarea>
-          </div>
-          <div class="form-submit">
-            <button type="submit" class="btn btn-primary w-full" style="width:100%;justify-content:center;" data-magnetic>
-              Send Message <span class="btn-arrow">→</span>
-            </button>
-          </div>
-          <p class="contact-form__response-note">We respond within 24 hours — usually much faster.</p>
+          <div class="field"><label for="message">Project description *</label><textarea id="message" name="message" placeholder="What are you trying to achieve? What does success look like?" required></textarea><span class="field__err">Tell us a little about the project.</span></div>
+          <div><button class="btn btn-gold" type="submit">Send message ${arrow}</button></div>
+          <p class="form__note">Sending opens your email app with the message ready to go, addressed to ${c.email}.</p>
         </form>
-        <div class="form-success" id="form-success">
-          <div class="form-success__icon">✓</div>
-          <h3 class="display-sm">Message Received</h3>
-          <p class="text-second" style="font-size:15px;line-height:1.7;">
-            Thank you for reaching out. We've received your message and will respond within 24 hours.
-          </p>
-        </div>
-      `;
+        <div class="form-success" id="form-success" role="status">
+          <h3 class="h3">Almost there.</h3>
+          <p class="lede" style="margin-top:12px">Your email app should have opened with your message ready to send. If it didn't, email <a class="gold" href="mailto:${c.email}">${c.email}</a> directly and I'll reply within 24 hours.</p>
+        </div>`;
 
-      initContactForm();
+      const sel = new URLSearchParams(location.search).get('service');
+      if (sel) { const s = form.querySelector('#service'); if (s) s.value = sel; }
+      initForm(form);
     }
+
+    mount('next-steps', cfg.next.map((n, i) => `
+      <div class="next__card reveal" style="--d:${i * 80}ms"><span class="mono kicker">${n.label}</span><div><h3 class="h3">${n.title}</h3><p>${n.text}</p></div></div>`).join(''));
   }
 
-  function initContactForm() {
-    const form    = document.getElementById('contact-form');
-    const success = document.getElementById('form-success');
-
-    if (!form) return;
-
+  function initForm(root) {
+    const form = root.querySelector('#contact-form');
+    const ok   = root.querySelector('#form-success');
     form.addEventListener('submit', e => {
       e.preventDefault();
-
-      // Simple validation
-      const required = form.querySelectorAll('[required]');
       let valid = true;
-
-      required.forEach(field => {
-        const empty = !field.value.trim();
-        field.style.borderColor = empty ? 'rgba(255,80,80,0.5)' : '';
-        if (empty) valid = false;
+      form.querySelectorAll('[required]').forEach(f => {
+        const bad = !f.value.trim() || (f.type === 'email' && !/^\S+@\S+\.\S+$/.test(f.value));
+        f.closest('.field').classList.toggle('has-error', bad);
+        if (bad) valid = false;
       });
-
       if (!valid) return;
 
-      const btn = form.querySelector('[type="submit"]');
-      btn.textContent = 'Sending...';
-      btn.style.opacity = '0.7';
+      const d = Object.fromEntries(new FormData(form).entries());
+      const body = [
+        `Name: ${d.name}`, d.company && `Company: ${d.company}`, `Email: ${d.email}`,
+        d.phone && `Phone: ${d.phone}`, d.service && `Service: ${d.service}`, d.budget && `Budget: ${d.budget}`,
+        '', d.message,
+      ].filter(v => v !== undefined && v !== '' && v !== false).join('\n');
 
-      // Simulate send (replace with real API call)
-      setTimeout(() => {
-        form.style.display = 'none';
-        success.classList.add('is-visible');
-      }, 1200);
+      window.location.href = `mailto:${cfg.contact.email}?subject=${encodeURIComponent('Project enquiry from ' + d.name)}&body=${encodeURIComponent(body)}`;
+      form.style.display = 'none';
+      ok.classList.add('is-visible');
     });
   }
 
-  // ─── Page Router ─────────────────────────────────────────────────
-
   function init() {
-    renderNav();
-    renderFooter();
-
-    const page = currentPage();
-
-    if (page === 'home') {
-      renderStats();
-      renderServicesPreview();
-      renderWorkPreview();
-      renderTestimonials();
-    }
-
-    if (page === 'services') {
-      renderServicesPage();
-    }
-
-    if (page === 'portfolio') {
-      renderPortfolioPage();
-    }
-
-    if (page === 'about') {
-      renderAboutPage();
-    }
-
-    if (page === 'contact') {
-      renderContactPage();
-    }
+    renderTop(); renderBottom();
+    renderStats(); renderMarquee(); renderWork(); renderRail();
+    renderServicesPage(); renderAbout(); renderApproach(); renderContact();
   }
 
-  return { init };
-
+  window.KamiComponents = { init };
 })();
